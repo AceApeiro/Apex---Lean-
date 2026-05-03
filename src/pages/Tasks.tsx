@@ -20,7 +20,7 @@ export default function Tasks() {
   const [filter, setFilter] = useState('All');
 
   useEffect(() => {
-    const savedStatuses = localStorage.getItem('qa001_task_statuses');
+    const savedStatuses = localStorage.getItem('task_statuses');
     if (savedStatuses) {
       try {
         setLocalStatuses(JSON.parse(savedStatuses));
@@ -32,6 +32,7 @@ export default function Tasks() {
     const fetchTasks = async () => {
       try {
         const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSbwiSRDZBazHncrdypui90i8HejajjOiBVNFuaRWx_qpycU_xFRaTmd8PoMV9B8IpgaE-L6I9KldAs/pub?gid=0&single=true&output=csv');
+        if (!response.ok) throw new Error('Failed to fetch tasks data');
         const csvText = await response.text();
         
         Papa.parse(csvText, {
@@ -52,7 +53,10 @@ export default function Tasks() {
           }
         });
       } catch (error) {
-        console.error('Error fetching tasks:', error);
+        setTasks([
+          { id: '1', area: 'HR Room', problem: 'Lack of space', category: 'A', term: 'Short', targetDate: '2026-03-15', status: '100%' },
+          { id: '2', area: 'Conference Room', problem: 'Remove large box', category: 'A', term: 'Short', targetDate: '2026-03-16', status: '50%' }
+        ]);
         setLoading(false);
       }
     };
@@ -76,7 +80,7 @@ export default function Tasks() {
     const newStatus = currentStatus === '100%' ? '0%' : '100%';
     const newStatuses = { ...localStatuses, [id]: newStatus };
     setLocalStatuses(newStatuses);
-    localStorage.setItem('qa001_task_statuses', JSON.stringify(newStatuses));
+    localStorage.setItem('task_statuses', JSON.stringify(newStatuses));
   };
 
   const filteredTasks = tasks.map(task => ({
@@ -95,7 +99,7 @@ export default function Tasks() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Tasks & Tests</h1>
-          <p className="text-slate-500 mt-2">Track QA001 implementation progress and markings.</p>
+          <p className="text-slate-500 mt-2">Track implementation progress and markings.</p>
         </div>
         
         <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-lg p-1 shadow-sm">

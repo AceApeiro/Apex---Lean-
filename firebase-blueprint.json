@@ -1,0 +1,169 @@
+{
+  "entities": {
+    "Folder": {
+      "title": "Folder",
+      "description": "A folder to organize images",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "createdAt"]
+    },
+    "Image": {
+      "title": "Image",
+      "description": "An image uploaded to a folder",
+      "type": "object",
+      "properties": {
+        "url": { "type": "string", "format": "uri" },
+        "title": { "type": "string" },
+        "folderId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["url", "title", "createdAt"]
+    },
+    "Minute": {
+      "title": "Minute",
+      "description": "Meeting minutes",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "attendees": { "type": "string" },
+        "discussion": { "type": "string" },
+        "actionItems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "text": { "type": "string" },
+              "status": { "type": "string" }
+            }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["date", "time", "attendees", "discussion", "actionItems", "createdAt"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Chat message",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "content", "createdAt"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Audit log entry",
+      "type": "object",
+      "properties": {
+        "action": { "type": "string" },
+        "details": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["action", "createdAt"]
+    },
+    "User": {
+      "title": "User",
+      "description": "User profile",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["admin", "user"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "role", "createdAt"]
+    },
+    "BlogComment": {
+      "title": "BlogComment",
+      "description": "A comment on the blog",
+      "type": "object",
+      "properties": {
+        "author": { "type": "string" },
+        "text": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["author", "text", "timestamp", "createdAt"]
+    },
+    "BlogReaction": {
+      "title": "BlogReaction",
+      "description": "Reactions for the blog",
+      "type": "object",
+      "properties": {
+        "thumbsUp": { "type": "number" },
+        "heart": { "type": "number" },
+        "award": { "type": "number" }
+      },
+      "required": ["thumbsUp", "heart", "award"]
+    },
+    "BlogTask": {
+      "title": "BlogTask",
+      "description": "Task in the blog section",
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "completed": { "type": "boolean" }
+      },
+      "required": ["text", "completed"]
+    },
+    "BlogPost": {
+      "title": "BlogPost",
+      "description": "A blog post",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "date": { "type": "string" }
+      },
+      "required": ["title", "content", "date"]
+    }
+  },
+  "firestore": {
+    "/folders/{folderId}": {
+      "schema": { "$ref": "#/entities/Folder" },
+      "description": "Folders"
+    },
+    "/images/{imageId}": {
+      "schema": { "$ref": "#/entities/Image" },
+      "description": "Images"
+    },
+    "/minutes/{minuteId}": {
+      "schema": { "$ref": "#/entities/Minute" },
+      "description": "Meeting minutes"
+    },
+    "/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/Message" },
+      "description": "Chat messages"
+    },
+    "/audit_logs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Audit logs"
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles"
+    },
+    "/blog_comments/{commentId}": {
+      "schema": { "$ref": "#/entities/BlogComment" },
+      "description": "Blog comments"
+    },
+    "/blog_reactions/{reactionId}": {
+      "schema": { "$ref": "#/entities/BlogReaction" },
+      "description": "Blog reactions"
+    },
+    "/blog_tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/BlogTask" },
+      "description": "Blog tasks"
+    },
+    "/blog_posts/{postId}": {
+      "schema": { "$ref": "#/entities/BlogPost" },
+      "description": "Blog posts"
+    }
+  }
+}

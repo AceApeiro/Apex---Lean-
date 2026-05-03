@@ -1,0 +1,5 @@
+#REF!,Area,Problem / Improvement Point,stage,Category A / B / C,Target Date,Progress,Days Left,Status,Assignee
+1,Conf. Room,Arrange small boxes neatly,5S S2,A,18/02/2026,100%,Completed,Completed,Completed
+2,Conf. Room,Remove large box,5S S2,A,23/02/2026,100%,Completed,Completed,Completed
+3,Conf. Room,Move table slightly backward,5S S2,A,23/02/2026,100%,Completed,Completed,Completed
+4,Conf. Room,Improve cleaning and dust control,5S S3,A,23/02/2026,100%,Completed,Completed,Completed

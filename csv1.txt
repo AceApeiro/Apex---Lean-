@@ -1,0 +1,5 @@
+Priority,HR Room,Conference Room,Total,
+A - Short Term,13,9,22,
+B - Medium Term,7,6,13,
+C - Long Term,5,7,12,
+Total Actions,25,22,47,
