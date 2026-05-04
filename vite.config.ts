@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), tailwindcss()],
 
-    // IMPORTANT for GitHub Pages deployment
+    // IMPORTANT: GitHub Pages base path
     base: '/Apex---Lean-/',
 
     define: {
@@ -18,17 +18,23 @@ export default defineConfig(({ mode }) => {
 
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve(__dirname, 'src'),
       },
     },
 
     server: {
-      // HMR control (kept as your original logic)
+      // safer fallback for dev mode
       hmr: process.env.DISABLE_HMR !== 'true',
     },
 
     build: {
       outDir: 'dist',
+      emptyOutDir: true,
+      sourcemap: false,
+    },
+
+    preview: {
+      port: 4173,
     }
   };
 });
