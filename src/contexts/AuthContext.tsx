@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { auth, signInWithPopup, googleProvider, signOut, onAuthStateChanged, db, doc, getDoc, setDoc, signInWithEmailAndPassword, createUserWithEmailAndPassword } from '../firebase';
+import React, { createContext, useContext, useState } from 'react';
 
 interface User {
   id: string;
@@ -22,87 +21,56 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  // ✅ FAKE USER (always logged in)
+  const [user, setUser] = useState<User | null>({
+    id: 'guest-id',
+    email: 'guest@local.app',
+    role: 'admin', // 👈 gives full access
+    name: 'Guest User',
+    photoURL: ''
+  });
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      try {
-        if (firebaseUser) {
-          // Check if user exists in Firestore
-          const userRef = doc(db, 'users', firebaseUser.uid);
-          const userSnap = await getDoc(userRef);
-          
-          let role = 'user';
-          if (userSnap.exists()) {
-            role = userSnap.data().role || 'user';
-            // Force info@acestool.com to be admin if somehow it's not
-            if (firebaseUser.email === 'info@acestool.com' && role !== 'admin') {
-              role = 'admin';
-              await setDoc(userRef, { role: 'admin' }, { merge: true });
-            }
-          } else {
-            // Create new user document
-            // Make info@acestool.com admin by default
-            role = firebaseUser.email === 'info@acestool.com' ? 'admin' : 'user';
-            await setDoc(userRef, {
-              email: firebaseUser.email,
-              role: role,
-              createdAt: new Date().toISOString()
-            });
-          }
+  const [loading] = useState(false);
 
-          setUser({
-            id: firebaseUser.uid,
-            email: firebaseUser.email || '',
-            role: role,
-            name: firebaseUser.displayName || '',
-            photoURL: firebaseUser.photoURL || ''
-          });
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        console.error("Error in auth state change:", error);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
+  // ✅ Mock login (does nothing)
   const login = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-    } catch (error) {
-      console.error('Error signing in with Google', error);
-      throw error;
-    }
+    console.log('Mock login');
   };
 
   const loginWithEmail = async (email: string, pass: string) => {
-    await signInWithEmailAndPassword(auth, email, pass);
+    console.log('Mock email login', email);
   };
 
   const signupWithEmail = async (email: string, pass: string) => {
-    await createUserWithEmailAndPassword(auth, email, pass);
+    console.log('Mock signup', email);
   };
 
   const logout = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error('Error signing out', error);
-    }
+    console.log('Mock logout');
+    setUser({
+      id: 'guest-id',
+      email: 'guest@local.app',
+      role: 'admin',
+      name: 'Guest User',
+      photoURL: ''
+    });
   };
 
   const isAdmin = user?.role === 'admin';
 
   return (
-    <AuthContext.Provider value={{ user, login, loginWithEmail, signupWithEmail, logout, isAdmin, loading }}>
-      {!loading && children}
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        loginWithEmail,
+        signupWithEmail,
+        logout,
+        isAdmin,
+        loading
+      }}
+    >
+      {children}
     </AuthContext.Provider>
   );
 }
